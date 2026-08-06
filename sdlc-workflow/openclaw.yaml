@@ -1,0 +1,19 @@
+id: sdlc-workflow
+name: sdlc-workflow
+version: 1.0.0
+description: "Software Development Life Cycle Agent"
+runtime: python
+exec: python3
+entrypoint: openclaw_sdlc_agent/agent.py
+
+model:
+  default: "openai/gpt-5.6-terra"
+
+tools:
+  allow:
+    - exec
+    - read
+    - write
+  exec:
+    mode: auto
+    host: gateway

@@ -1,0 +1,10 @@
+{
+  "name": "sdlc_agent",
+  "version": "1.0.0",
+  "description": "OpenClaw SDLC Agent (Python Runtime)",
+  "main": "openclaw_sdlc_agent/agent.py",
+  "openclaw": {
+    "type": "agent",
+    "schema": "openclaw.yaml"
+  }
+}

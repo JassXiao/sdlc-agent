@@ -1,0 +1,10 @@
+codex-home/
+.tmp/
+__pycache__/
+*.pyc
+*.log
+codex-home/
+.tmp/
+__pycache__/
+*.pyc
+*.log

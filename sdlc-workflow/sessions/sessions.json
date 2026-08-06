@@ -1,0 +1,119 @@
+{
+  "agent:sdlc_agent:main": {
+    "sessionId": "39d7c524-28dd-4031-958e-f55aac00b196",
+    "updatedAt": 1785639392393,
+    "sessionStartedAt": 1785639003367,
+    "lastInteractionAt": 1785639392300,
+    "skillsSnapshot": {
+      "skills": [
+        {
+          "name": "agent-memory"
+        },
+        {
+          "name": "blogwatcher",
+          "requiredEnv": []
+        },
+        {
+          "name": "blucli",
+          "requiredEnv": []
+        },
+        {
+          "name": "clawhub"
+        },
+        {
+          "name": "clawsec-suite"
+        },
+        {
+          "name": "diagram-maker"
+        },
+        {
+          "name": "eightctl",
+          "requiredEnv": []
+        },
+        {
+          "name": "find-skills"
+        },
+        {
+          "name": "gifgrep",
+          "requiredEnv": []
+        },
+        {
+          "name": "healthcheck"
+        },
+        {
+          "name": "meme-maker",
+          "requiredEnv": []
+        },
+        {
+          "name": "node-connect"
+        },
+        {
+          "name": "node-inspect-debugger",
+          "requiredEnv": []
+        },
+        {
+          "name": "notion",
+          "primaryEnv": "NOTION_API_TOKEN",
+          "requiredEnv": []
+        },
+        {
+          "name": "ordercli",
+          "requiredEnv": []
+        },
+        {
+          "name": "Proactivity (Proactive Agent)",
+          "requiredEnv": []
+        },
+        {
+          "name": "python-debugpy",
+          "requiredEnv": []
+        },
+        {
+          "name": "self-improving-agent"
+        },
+        {
+          "name": "skill-creator"
+        },
+        {
+          "name": "sonoscli",
+          "requiredEnv": []
+        },
+        {
+          "name": "spike"
+        },
+        {
+          "name": "taskflow"
+        },
+        {
+          "name": "taskflow-inbox-triage"
+        },
+        {
+          "name": "tmux",
+          "requiredEnv": []
+        },
+        {
+          "name": "weather"
+        }
+      ],
+      "version": 1785634061804,
+      "promptFormatVersion": 1,
+      "promptRef": {
+        "version": 1,
+        "algorithm": "sha256",
+        "hash": "6be3d5d2e2659c25d35174059088b0a1497b54aaa1bda09ae30caa21a0258719",
+        "bytes": 9522
+      }
+    },
+    "sessionFile": "/home/openclaw/.openclaw/agents/sdlc_agent/sessions/39d7c524-28dd-4031-958e-f55aac00b196.jsonl",
+    "quotaSuspension": {
+      "schemaVersion": 1,
+      "suspendedAt": 1785639007818,
+      "reason": "quota_exhausted",
+      "failedProvider": "openai",
+      "failedModel": "gpt-5.6-terra",
+      "laneId": "main",
+      "expectedResumeBy": 1785640807818,
+      "state": "suspended"
+    }
+  }
+}

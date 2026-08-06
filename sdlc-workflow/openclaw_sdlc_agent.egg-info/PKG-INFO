@@ -1,0 +1,10 @@
+Metadata-Version: 1.2
+Name: openclaw-sdlc-agent
+Version: 1.0.0
+Summary: An enterprise SDLC Agent with MemorySaver checkpointer and Human-in-the-Loop approval for OpenClaw.
+Home-page: UNKNOWN
+Author: Dev Team
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.9

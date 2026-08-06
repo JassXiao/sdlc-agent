@@ -1,0 +1,12 @@
+openclaw-sdlc-agent/
+├── openclaw.yaml                  # OpenClaw Agent 规范声明文件
+├── setup.py                       # Python 打包 setup 脚本
+├── requirements.txt               # 依赖库清单
+└── openclaw_sdlc_agent/           # Agent 核心代码包
+    ├── __init__.py
+    ├── config.py                  # 配置与环境变量
+    ├── state.py                   # SDLC 状态机定义
+    ├── nodes.py                   # Sub-Agents 节点定义与路由
+    ├── graph.py                   # LangGraph 图编译与 MemorySaver 挂载
+    ├── exporter.py                # 本地磁盘文件导出模块
+    └── agent.py                   # OpenClaw Agent 标准入口实现
