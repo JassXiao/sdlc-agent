@@ -108,12 +108,27 @@ def devops_node(state: SDLCState) -> Dict[str, Any]:
     return {"deploy_result": res_json, "status": "COMPLETED"}
 
 def route_consistency_gate(state: SDLCState) -> Literal["pass", "retry", "fail_halt"]:
-    audit = state.get("consistency_audit", {})
-    if audit.get("gate_result") == "PASS":
-        return "pass"
-    elif state.get("consistency_retries", 0) < 3:
-        return "retry"
-    return "fail_halt"
+    try:
+        audit = state.get("consistency_audit")
+        if not isinstance(audit, dict):
+            print(f"⚠️ Tester/Auditor crashed, did not execute, or returned invalid audit: {audit}")
+            return "fail_halt"
+
+        if audit.get("gate_result") == "PASS":
+            return "pass"
+        elif state.get("consistency_retries", 0) < 3:
+            print(f"🔄 Tester/Auditor gate failed. Retrying... (Attempt {state.get('consistency_retries', 0)}/3)")
+            return "retry"
+
+        print("❌ Tester/Auditor gate failed. Halting workflow.")
+        return "fail_halt"
+    except Exception as e:
+        print(f"💥 Exception in route_consistency_gate conditional edge: {e}")
+        return "fail_halt"
 
 def route_prd_approval(state: SDLCState) -> Literal["approved", "rejected"]:
-    return "approved" if state.get("prd_approved", False) else "rejected"
+    try:
+        return "approved" if state.get("prd_approved", False) else "rejected"
+    except Exception as e:
+        print(f"💥 Exception in route_prd_approval conditional edge: {e}")
+        return "rejected"
