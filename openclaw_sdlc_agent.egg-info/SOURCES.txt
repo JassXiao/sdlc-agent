@@ -12,3 +12,6 @@ openclaw_sdlc_agent.egg-info/dependency_links.txt
 openclaw_sdlc_agent.egg-info/entry_points.txt
 openclaw_sdlc_agent.egg-info/requires.txt
 openclaw_sdlc_agent.egg-info/top_level.txt
+openclaw_sdlc_agent/agents/__init__.py
+openclaw_sdlc_agent/agents/tester.py
+tests/test_tester.py

@@ -1,3 +1,2 @@
 [openclaw.agents]
 sdlc_agent = openclaw_sdlc_agent.agent:SDLCOpenClawAgent
-
