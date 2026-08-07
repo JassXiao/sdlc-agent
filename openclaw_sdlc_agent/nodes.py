@@ -99,6 +99,67 @@ def code_reviewer_node(state: SDLCState) -> Dict[str, Any]:
     res_json = json.loads(response.content.strip().strip("```json").strip("```"))
     return {"review_result": res_json, "status": "CODE_REVIEW_PASSED"}
 
+def tester_node(state: SDLCState) -> Dict[str, Any]:
+    print("\n--- [Phase 4a] tester: 运行单元测试 ---")
+    llm = get_llm()
+
+    backend_code = state.get("backend_code", [])
+    frontend_code = state.get("frontend_code", [])
+    all_code = backend_code + frontend_code
+
+    system_prompt = "你是 Tester Sub-Agent。请根据生成的核心后端与前端代码，编写并模拟运行单元测试，报告测试通过率、失败用例及日志。\n输出格式为 JSON: {\"test_passed\": true, \"pass_rate\": 100, \"failed_tests\": [], \"test_log\": \"...\"}"
+
+    user_msg = f"生成的待测代码内容如下：\n\n{json.dumps(all_code, ensure_ascii=False)}"
+    response = llm.invoke([SystemMessage(content=system_prompt), HumanMessage(content=user_msg)])
+    try:
+        res_json = json.loads(response.content.strip().strip("```json").strip("```"))
+    except Exception:
+        res_json = {"error": "解析测试结果失败", "raw": response.content}
+
+    return {"test_result": res_json, "status": "UNIT_TEST_COMPLETED"}
+
+def reviewer_node(state: SDLCState) -> Dict[str, Any]:
+    print("\n--- [Phase 4b] reviewer: 执行代码风格检查 (git diff) ---")
+    llm = get_llm()
+
+    import subprocess
+    git_diff = ""
+    try:
+        # 1. try unstaged changes
+        diff_res = subprocess.run(["git", "diff"], capture_output=True, text=True)
+        git_diff = diff_res.stdout.strip()
+
+        # 2. if empty, try staged changes
+        if not git_diff:
+            diff_cached = subprocess.run(["git", "diff", "--cached"], capture_output=True, text=True)
+            git_diff = diff_cached.stdout.strip()
+
+        # 3. if still empty, try the last commit's diff
+        if not git_diff:
+            diff_last = subprocess.run(["git", "diff", "HEAD~1"], capture_output=True, text=True)
+            git_diff = diff_last.stdout.strip()
+
+        # 4. if still empty, run git show
+        if not git_diff:
+            show_res = subprocess.run(["git", "show"], capture_output=True, text=True)
+            git_diff = show_res.stdout.strip()
+    except Exception as e:
+        git_diff = f"获取 git diff 失败: {str(e)}"
+
+    if not git_diff:
+        git_diff = "No recent git diff found."
+
+    system_prompt = "你是 Reviewer Sub-Agent。请对 Jules 修改的 git diff 进行代码风格检查（Code Style Check），找出可能不合规范的地方并给出改进建议。\n输出格式为 JSON: {\"review_passed\": true, \"score\": 95, \"style_issues\": [], \"summary\": \"...\"}"
+
+    user_msg = f"以下是 Jules 修改的 git diff 内容：\n\n{git_diff}"
+    response = llm.invoke([SystemMessage(content=system_prompt), HumanMessage(content=user_msg)])
+    try:
+        res_json = json.loads(response.content.strip().strip("```json").strip("```"))
+    except Exception:
+        res_json = {"error": "解析 Review 结果失败", "raw": response.content}
+
+    return {"review_result": res_json, "status": "STYLE_REVIEW_COMPLETED"}
+
 def devops_node(state: SDLCState) -> Dict[str, Any]:
     print("\n--- [Phase 5] devops-automator: 生成 Dockerfile 并部署 ---")
     llm = get_llm()

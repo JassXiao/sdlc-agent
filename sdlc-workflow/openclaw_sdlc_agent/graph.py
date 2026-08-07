@@ -4,7 +4,8 @@ from .state import SDLCState
 from .nodes import (
     pm_prd_node, software_architect_node, database_optimizer_node,
     consistency_gate_node, backend_architect_node, frontend_developer_node,
-    code_reviewer_node, devops_node, route_prd_approval, route_consistency_gate
+    devops_node, route_prd_approval, route_consistency_gate,
+    tester_node, reviewer_node
 )
 
 def build_sdlc_graph():
@@ -16,7 +17,8 @@ def build_sdlc_graph():
     workflow.add_node("consistency_gate", consistency_gate_node)
     workflow.add_node("backend_dev", backend_architect_node)
     workflow.add_node("frontend_dev", frontend_developer_node)
-    workflow.add_node("code_reviewer", code_reviewer_node)
+    workflow.add_node("tester", tester_node)
+    workflow.add_node("reviewer", reviewer_node)
     workflow.add_node("devops", devops_node)
     
     workflow.add_edge(START, "pm_prd")
@@ -37,8 +39,15 @@ def build_sdlc_graph():
     })
     
     workflow.add_edge("backend_dev", "frontend_dev")
-    workflow.add_edge("frontend_dev", "code_reviewer")
-    workflow.add_edge("code_reviewer", "devops")
+
+    # 并行触发 tester 与 reviewer 节点，缩短总体执行时间
+    workflow.add_edge("frontend_dev", "tester")
+    workflow.add_edge("frontend_dev", "reviewer")
+
+    # 汇合到 devops 节点
+    workflow.add_edge("tester", "devops")
+    workflow.add_edge("reviewer", "devops")
+
     workflow.add_edge("devops", END)
     
     memory = MemorySaver()
