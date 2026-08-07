@@ -1,6 +1,7 @@
 from typing import TypedDict, List, Dict, Any
 
-class SDLCState(TypedDict):
+class SDLCState(TypedDict, total=False):
+    # Core requirements
     user_prompt: str
     prd: Dict[str, Any]
     prd_approved: bool
@@ -15,3 +16,12 @@ class SDLCState(TypedDict):
     review_result: Dict[str, Any]
     deploy_result: Dict[str, Any]
     status: str
+
+    # Model and settings
+    model_used: str
+    tools_enabled: List[str]
+
+    # Workflow tracking, logging and telemetry
+    logs: List[str]
+    audit_report: str
+    node_execution_times: Dict[str, float]
