@@ -7,6 +7,7 @@ from typing import Dict, Any, List, Optional
 from langchain_openai import ChatOpenAI
 from .graph import build_sdlc_graph
 from .exporter import save_sdlc_project_to_disk
+from .metrics_collector import MetricsCollector
 
 class SDLCOpenClawAgent:
     """支持全局 OpenClaw 模型登录与网关鉴权的 SDLC Agent"""
@@ -53,9 +54,17 @@ class SDLCOpenClawAgent:
             "logs": [f"Initialized with openclaw global model: {self.model_name}"]
         }
 
+        collector = MetricsCollector(session_id=sid, model_used=self.model_name)
+
         try:
             final_state = self.app.invoke(initial_input, thread_config)
             result_text = final_state.get("audit_report") or final_state.get("prd") or f"SDLC 任务已通过全局模型完成（模型: {self.model_name}）"
+
+            collector.stop()
+            retries = final_state.get("consistency_retries", 0)
+            report = collector.generate_report(status="success", retries=retries)
+            print("\n" + "="*40 + "\nExecution Summary Report:\n" + report + "="*40 + "\n")
+
             return {
                 "status": "success",
                 "session_id": sid,
@@ -64,6 +73,9 @@ class SDLCOpenClawAgent:
                 "output": final_state
             }
         except Exception as e:
+            collector.stop()
+            report = collector.generate_report(status=f"error ({str(e)})", retries=0)
+            print("\n" + "="*40 + "\nExecution Summary Report (FAILED):\n" + report + "="*40 + "\n")
             return {
                 "status": "error",
                 "session_id": sid,
