@@ -12,6 +12,7 @@ class SDLCState(TypedDict):
     consistency_retries: int
     backend_code: List[Dict[str, Any]]
     frontend_code: List[Dict[str, Any]]
+    test_result: Dict[str, Any]
     review_result: Dict[str, Any]
     deploy_result: Dict[str, Any]
     status: str
